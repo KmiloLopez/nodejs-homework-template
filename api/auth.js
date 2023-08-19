@@ -3,8 +3,10 @@ const router = express.Router();
 const signupCtrl = require("../controller/signup");
 const loginCtrl = require("../controller/login");
 const auth = require("../middleware/auth");
-const { createContact, getAllContacts } = require("../service/contact");
+
 const currentCtrl = require("../controller/current");
+
+
 
 const invalidatedTokens = new Set();
 
@@ -44,40 +46,4 @@ router.post("/logout", validToken, auth, (req, res, next) => {
     data: "success",
   });
 });
-
-router.post("/contacts", validToken, auth, async (req, res, next) => {
-  const { name, phone, favorite } = req.body;
-  const owner = req.user._id;
-
-  try {
-    const result = await createContact({ name, phone, favorite, owner });
-
-    res.status(201).json({
-      status: "created",
-      status: 201,
-      data: { cat: result },
-    });
-  } catch (error) {
-    next(error);
-  }
-});
-
-router.get("/contacts", validToken, auth, async (req, res, next) => {
-  const owner = req.user._id;
-
-  try {
-    const results = await getAllContacts({ owner });
-
-    res.json({
-      status: "success",
-      code: 200,
-      data: {
-        cats: results,
-      },
-    });
-  } catch (error) {
-    next(error);
-  }
-});
-
 module.exports = router;

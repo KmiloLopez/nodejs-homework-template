@@ -2,7 +2,8 @@ const express = require("express");
 const cors = require("cors");
 const connection = require("./db/connection");
 require("dotenv").config();
-const routerApi = require("./api");
+const routerApi = require("./api/auth");
+const routerApiContacts = require("./api/contacts");
 
 const app = express();
 
@@ -12,6 +13,7 @@ app.use(cors());
 require("./config/config-passport");
 
 app.use("/users", routerApi);
+app.use("/users/contacts", routerApiContacts);
 
 app.use((_, res) => {
   res.status(404).json({

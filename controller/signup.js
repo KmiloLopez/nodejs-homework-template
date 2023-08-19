@@ -4,13 +4,13 @@ const User = require("../schemas/user");
 const { getUserByEmail } = require("../service/user");
 require("dotenv").config();
 
-const {userSquem}=require("../helpers/validationSquema");
+
 const secret = process.env.SECRET;
 
 const signupCtrl = async (req, res, next) => {
   console.log("req.body",req.body)
   try {
-  const result = await userSquem.validate(req.body)
+  const result = await User.validate(req.body)
   console.log("SQUMENA",result);
   } catch (error) {console.log(error)
   }

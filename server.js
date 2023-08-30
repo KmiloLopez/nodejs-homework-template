@@ -1,5 +1,5 @@
-const express = require("express");
-const cors = require("cors");
+const express = require("express");//libreria para el servidor
+const cors = require("cors"); //libreria seguridad
 const connection = require("./db/connection");
 require("dotenv").config();
 const routerApi = require("./api/auth");
@@ -33,7 +33,7 @@ app.use((err, _, res) => {
     status: "fail",
     code: 500,
     message: err.message,
-    data: "Internal Server Error papa",
+    data: "Internal Server Error",
   });
 });
 

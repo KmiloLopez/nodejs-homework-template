@@ -3,7 +3,7 @@ const passport = require("passport");
 const User = require("../schemas/user");
 const { getUserByEmail } = require("../service/user");
 require("dotenv").config();
-
+var gravatar = require('gravatar');
 
 const secret = process.env.SECRET;
 
@@ -16,7 +16,8 @@ const signupCtrl = async (req, res, next) => {
   }
   const { username, email, password, subscription } = req.body;
   const user = await getUserByEmail(email);
-
+  let avatarURL = gravatar.url(`${email}`, {s: '200', r: 'pg', d: 'robohash'});
+  
   if (user) {
     return res.status(409).json({
       status: "error",
@@ -26,16 +27,17 @@ const signupCtrl = async (req, res, next) => {
     });
   }
   try {
-    const newUser = new User({ username, email });
+    const newUser = new User({ username, email, avatarURL });
     newUser.setPassword(password);
-    await newUser.save();
-
+    await newUser.save();//save the new user on DB
+    
     res.status(201).json({
       status: "success",
       code: 201,
       user: {
         email: `${email}`,
-        subscription: "starter"||`${subscription}`
+        subscription: "starter"||`${subscription}`,
+        avatarURL: `${avatarURL}`,
       },
       data: {
         message: "Registration successful",

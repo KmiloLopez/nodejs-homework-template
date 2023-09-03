@@ -6,7 +6,8 @@ require("dotenv").config();
 const secret = process.env.SECRET;
 
 const loginCtrl = async (req, res, next) => {
-  const { email, password } = req.body;
+   const { email, password } = req.body;
+  
   const user = await getUserByEmail(email);
 
   if (!user || !user.validPassword(password)) {
@@ -25,7 +26,7 @@ const loginCtrl = async (req, res, next) => {
     subscription: user.subscription
   };
 
-  const token = jwt.sign(payload, secret, { expiresIn: "1h" });
+  const token = jwt.sign(payload, secret, { expiresIn: "2h" });
   res.json({
     status: "success",
     code: 200,

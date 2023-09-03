@@ -1,9 +1,16 @@
-const express = require("express");
-const cors = require("cors");
+const express = require("express");//libreria para el servidor
+const cors = require("cors"); //libreria seguridad
 const connection = require("./db/connection");
 require("dotenv").config();
+
+const path = require("path");
+const fs = require("fs").promises;
 const routerApi = require("./api/auth");
 const routerApiContacts = require("./api/contacts");
+const uploadFolder = path.join(process.cwd(), "public");
+const uploadDir = path.join(process.cwd(), "public/avatars");//ruta y nombre de carpeta a crear
+const storeImage = path.join(process.cwd(), "public/tmp");//temporal
+
 
 const app = express();
 
@@ -14,6 +21,8 @@ require("./config/config-passport");
 
 app.use("/users", routerApi);
 app.use("/users/contacts", routerApiContacts);
+
+app.use(express.static("public"));
 
 app.use((_, res) => {
   res.status(404).json({
@@ -33,16 +42,30 @@ app.use((err, _, res) => {
     status: "fail",
     code: 500,
     message: err.message,
-    data: "Internal Server Error papa",
+    data: "Internal Server Error",
   });
 });
+const isAccessible = (path) => {
+  return fs
+    .access(path)
+    .then(() => true)
+    .catch(() => false);
+};
 
+const createFolderIfNotExist = async (folder) => {
+  if (!(await isAccessible(folder))) {
+    await fs.mkdir(folder);
+  }
+};
 const PORT = process.env.PORT || 3000;
 
 connection
   .then(() => {
     app.listen(PORT, () => {
       console.log(`Server running. Use our API on port: ${PORT}`);
+      createFolderIfNotExist(uploadFolder);
+      createFolderIfNotExist(uploadDir);
+      createFolderIfNotExist(storeImage);
     });
   })
   .catch((err) => {

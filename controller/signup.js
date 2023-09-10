@@ -12,12 +12,12 @@ var gravatar = require('gravatar');
 const secret = process.env.SECRET;
 
 const signupCtrl = async (req, res, next) => {
-  console.log("req.body",req.body)
-  try {
-  const result = await User.validate(req.body)
-  console.log("SQUMENA",result);
-  } catch (error) {console.log(error)
-  }
+  // console.log("req.body",req.body)
+  // try {
+  // const result = await User.validate(req.body)
+  // console.log("SQUMENA",result);
+  // } catch (error) {console.log(error)
+  // }
   const { username, email, password, subscription } = req.body;
   const user = await getUserByEmail(email);
   let avatarURL = gravatar.url(`${email}`, {s: '200', r: 'pg', d: 'robohash'});

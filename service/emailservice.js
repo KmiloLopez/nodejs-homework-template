@@ -17,7 +17,7 @@ const emailService = {
         from: EMAIL_SENDER,
         to: "luckas_88@outlook.es",
         subject: "Authenticate your email",
-        html: `<a href='http://localhost:3000/verify/${verificationToken}'>Verification email</a>`,
+        html: `<a href='http://localhost:3000/users/verify/${verificationToken}'>Verification email</a>`,
       },
       (err, data) => {
         if (err) {

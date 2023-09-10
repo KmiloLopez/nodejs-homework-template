@@ -59,15 +59,22 @@ const validToken = (req, res, next) => {
 router.get("/verify/:verificationToken", async (req, res, next) => {
   
   try {
-    console.log("app.get")
     const existingUser = await getUserByVerificationToken(
       req.params.verificationToken
     );
 
     if (existingUser) {
       await verifyUser(existingUser._id);
-      res.send();
-    } else next("User not found");
+      res.status(201).json({
+        status: 'success',
+        code: 201,
+        message: 'Verification Successful, Email Verified'
+      });
+    } else res.status(404).json({
+      status: 'error',
+      code: 404,
+      message: 'Error, Not Found'
+    });;
   } catch (err) {
     next(err);
   }

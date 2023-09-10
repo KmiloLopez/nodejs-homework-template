@@ -15,6 +15,8 @@ require("dotenv").config();
 const contactSchema = require("../schemas/contacts");
 const userSchema = require("../schemas/user");
 const { NotFound } = require("http-errors");
+const { getUserByVerificationToken, verifyUser } = require("../service/user");
+const { verify } = require("jsonwebtoken");
 
 console.log(process.cwd());
 const uploadDirTmp = path.join(process.cwd(), "public/tmp"); //ruta temporary folder
@@ -54,6 +56,22 @@ const validToken = (req, res, next) => {
   next();
 };
 
+router.get("/verify/:verificationToken", async (req, res, next) => {
+  
+  try {
+    console.log("app.get")
+    const existingUser = await getUserByVerificationToken(
+      req.params.verificationToken
+    );
+
+    if (existingUser) {
+      await verifyUser(existingUser._id);
+      res.send();
+    } else next("User not found");
+  } catch (err) {
+    next(err);
+  }
+});
 router.post("/signup", signupCtrl);
 
 router.post("/login", loginCtrl);

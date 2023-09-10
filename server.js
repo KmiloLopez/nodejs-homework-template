@@ -12,6 +12,8 @@ const uploadDir = path.join(process.cwd(), "public/avatars");//ruta y nombre de 
 const storeImage = path.join(process.cwd(), "public/tmp");//temporal
 
 
+
+
 const app = express();
 
 app.use(express.json());
@@ -45,6 +47,8 @@ app.use((err, _, res) => {
     data: "Internal Server Error",
   });
 });
+
+
 const isAccessible = (path) => {
   return fs
     .access(path)

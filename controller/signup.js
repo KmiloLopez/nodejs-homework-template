@@ -1,9 +1,13 @@
 const jwt = require("jsonwebtoken");
 const passport = require("passport");
 const User = require("../schemas/user");
+const emailService = require("../service/emailservice");
 const { getUserByEmail } = require("../service/user");
 require("dotenv").config();
+const { nanoid } = require("nanoid");
 var gravatar = require('gravatar');
+
+
 
 const secret = process.env.SECRET;
 
@@ -27,9 +31,13 @@ const signupCtrl = async (req, res, next) => {
     });
   }
   try {
-    const newUser = new User({ username, email, avatarURL });
+    const verificationToken = nanoid();
+    const newUser = new User({ username, email, avatarURL, verificationToken });
     newUser.setPassword(password);
     await newUser.save();//save the new user on DB
+
+
+    emailService.sendEmail(verificationToken);
     
     res.status(201).json({
       status: "success",

@@ -7,9 +7,11 @@ const secret = process.env.SECRET;
 
 const loginCtrl = async (req, res, next) => {
    const { email, password, verify} = req.body;
-  if(verify) {
+   //TODO: encontrar el usuario y retornar el valor de Verify
+ 
     const user = await getUserByEmail(email);
-
+    
+    if(user.verify) {
     if (!user || !user.validPassword(password)) {
       return res.status(400).json({
         status: "error",
@@ -40,15 +42,9 @@ const loginCtrl = async (req, res, next) => {
     });
   }else{
     res.json({
-      status: "success",
+      status: "Pending",
       code: 200,
-      data: {
-        token,
-      },
-      user: {
-        email: payload.email,
-        subscription: payload.subscription,
-      }
+      message: "Please validate your email, before accessing your account"
     });
   }
   
